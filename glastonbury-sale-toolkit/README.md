@@ -157,3 +157,22 @@ arithmetic.
 4. Sync your clock.
 5. Load the page ten minutes early, on one tab.
 6. Then sit on your hands. Do not refresh.
+
+## Sale-day dashboard
+
+`dashboard.html` is the phone-friendly version, published as an Artifact:
+
+**https://claude.ai/code/artifact/5991486e-6334-4e35-be68-e167fea99768**
+
+It carries the same countdown and phase logic as `glasto go`, plus tap-to-copy
+booking details and a live syndicate board. Two things to know:
+
+- It counts down on **your device's clock**. Phones sync automatically; laptops
+  drift, so verify with `glasto sync` on anything you are actually booking from.
+- The syndicate board uses the `room` capability, which only reaches people who
+  have the page open *and* have been shared it. Share it from the page's share
+  menu for the board to light up; without that it runs in solo mode.
+
+Registration numbers and postcodes entered in the dashboard stay in that
+device's `localStorage`. Only a typed name and a status are ever broadcast to
+the room — personal details are deliberately never shared.

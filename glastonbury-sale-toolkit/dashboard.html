@@ -1,0 +1,1088 @@
+<title>Worthy Farm Countdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --ground: #EAEEE9;
+    --surface: #FFFFFF;
+    --surface-sunk: #E1E7E0;
+    --ink: #16211B;
+    --ink-soft: #5C6B61;
+    --ink-faint: #8A9990;
+    --line: #D0D8CF;
+    --accent: #5B3FA8;
+    --accent-soft: #EDE7FA;
+    --ok: #1E7A4B;
+    --ok-soft: #DFF1E6;
+    --warn: #A9620B;
+    --warn-soft: #FBEBD6;
+    --stop: #B62F23;
+    --stop-soft: #FBE3E0;
+    --shadow: 0 1px 2px rgba(22, 33, 27, .06), 0 6px 20px rgba(22, 33, 27, .05);
+
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F1512;
+      --surface: #171F1A;
+      --surface-sunk: #121915;
+      --ink: #E7ECE5;
+      --ink-soft: #97A59B;
+      --ink-faint: #6D7C73;
+      --line: #26302A;
+      --accent: #B79BF0;
+      --accent-soft: #241C3B;
+      --ok: #5FCB8D;
+      --ok-soft: #12291D;
+      --warn: #E0A052;
+      --warn-soft: #2C2013;
+      --stop: #F08074;
+      --stop-soft: #2E1714;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .3);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0F1512;
+    --surface: #171F1A;
+    --surface-sunk: #121915;
+    --ink: #E7ECE5;
+    --ink-soft: #97A59B;
+    --ink-faint: #6D7C73;
+    --line: #26302A;
+    --accent: #B79BF0;
+    --accent-soft: #241C3B;
+    --ok: #5FCB8D;
+    --ok-soft: #12291D;
+    --warn: #E0A052;
+    --warn-soft: #2C2013;
+    --stop: #F08074;
+    --stop-soft: #2E1714;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .3);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.55;
+    padding-inline: 18px;
+    padding-block: 28px 56px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+    margin: 4px 0 0;
+  }
+
+  .lede {
+    color: var(--ink-soft);
+    margin: 8px 0 0;
+    max-width: 46ch;
+  }
+
+  /* ---- target picker ---- */
+
+  .targets {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .targets button {
+    flex: 1 1 auto;
+    min-width: 0;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .targets button:hover { border-color: var(--accent); color: var(--ink); }
+
+  .targets button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--surface);
+  }
+
+  :root[data-theme="dark"] .targets button[aria-pressed="true"],
+  :root:not([data-theme="light"]) .targets button[aria-pressed="true"] { color: #12100A; }
+
+  /* ---- the clock ---- */
+
+  .clock-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 20px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .clock-when {
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .clock-when strong { color: var(--ink); font-weight: 600; }
+
+  .clock {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .unit { display: flex; flex-direction: column; align-items: center; flex: 1 1 0; }
+
+  .unit .n {
+    font-size: clamp(30px, 11vw, 50px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -.03em;
+  }
+
+  .unit .l {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-family: var(--body);
+    font-weight: 600;
+    margin-top: 7px;
+  }
+
+  .sep {
+    font-size: clamp(24px, 8vw, 38px);
+    line-height: 1;
+    color: var(--ink-faint);
+    padding-bottom: 24px;
+  }
+
+  .clock.is-live .n { color: var(--ok); }
+
+  .live-banner {
+    font-family: var(--display);
+    font-size: clamp(26px, 8vw, 36px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ok);
+    letter-spacing: -.01em;
+  }
+
+  .live-since { font-size: 13px; color: var(--ink-soft); font-family: var(--body); }
+
+  /* ---- phase card: the whole point of the page ---- */
+
+  .phase {
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .phase .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .phase .headline {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .phase .sub { font-size: 14px; line-height: 1.5; }
+
+  .phase.calm    { background: var(--surface);     border-color: var(--line); }
+  .phase.calm .tag, .phase.calm .sub { color: var(--ink-soft); }
+
+  .phase.warn    { background: var(--warn-soft);   border-color: var(--warn); }
+  .phase.warn .tag { color: var(--warn); }
+  .phase.warn .sub { color: var(--ink); }
+
+  .phase.critical { background: var(--stop-soft);  border-color: var(--stop); }
+  .phase.critical .tag { color: var(--stop); }
+  .phase.critical .headline { color: var(--stop); }
+  .phase.critical .sub { color: var(--ink); }
+
+  .phase.live    { background: var(--ok-soft);     border-color: var(--ok); }
+  .phase.live .tag { color: var(--ok); }
+  .phase.live .sub { color: var(--ink); }
+
+  /* ---- generic section ---- */
+
+  section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0;
+    letter-spacing: -.005em;
+  }
+
+  .sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .hint { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+  /* ---- syndicate board ---- */
+
+  .me-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  input[type="text"] {
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface-sunk);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-width: 0;
+  }
+
+  input[type="text"]:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .status-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .status-picker button {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .status-picker button[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--ground);
+  }
+
+  .peers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+
+  .peers li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .peers li:first-child { border-top: 0; }
+
+  .peer-name { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+  .peer-you { font-size: 11px; color: var(--ink-faint); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    background: var(--surface-sunk);
+    color: var(--ink-soft);
+  }
+
+  .chip.s-queue   { background: var(--warn-soft); color: var(--warn); }
+  .chip.s-booking { background: var(--accent-soft); color: var(--accent); }
+  .chip.s-got     { background: var(--ok-soft); color: var(--ok); }
+  .chip.s-out     { background: var(--stop-soft); color: var(--stop); }
+
+  /* ---- booking details ---- */
+
+  .party { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+  .party th {
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 0 8px 7px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .party td {
+    padding: 9px 8px 9px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+
+  .party tr:last-child td { border-bottom: 0; }
+  .party .num { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .party .who { font-weight: 500; overflow-wrap: anywhere; }
+
+  .copy {
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--ink);
+    padding: 1px 0;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .copy:hover { border-bottom-color: var(--accent); color: var(--accent); }
+  .copy.copied { color: var(--ok); border-bottom-color: var(--ok); }
+  .missing { color: var(--stop); font-weight: 600; font-size: 12px; }
+
+  .row-del {
+    font: inherit;
+    font-size: 16px;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px 2px;
+  }
+  .row-del:hover { color: var(--stop); }
+
+  .add-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .add-row input { flex: 1 1 100px; }
+
+  .btn {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--surface);
+    cursor: pointer;
+  }
+
+  :root[data-theme="dark"] .btn,
+  :root:not([data-theme="light"]) .btn { color: #12100A; }
+
+  .btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .example-note {
+    font-size: 12px;
+    color: var(--warn);
+    background: var(--warn-soft);
+    border-radius: 8px;
+    padding: 8px 11px;
+  }
+
+  /* ---- reference ---- */
+
+  details {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0 20px;
+  }
+
+  summary {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 17px;
+    padding: 16px 0;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--mono); color: var(--ink-faint); font-size: 18px; }
+  details[open] summary::after { content: "\2212"; }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  .details-body { padding: 14px 0 18px; display: flex; flex-direction: column; gap: 14px; }
+
+  .dates { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .dates td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .dates tr:last-child td { border-bottom: 0; }
+  .dates td:last-child { text-align: right; color: var(--ink-soft); white-space: nowrap; padding-left: 12px; }
+  .dates .done td:first-child { color: var(--ink-faint); text-decoration: line-through; }
+
+  .money { display: flex; flex-direction: column; gap: 5px; font-size: 14px; }
+  .money div { display: flex; justify-content: space-between; gap: 12px; }
+  .money .amt { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .money .total { border-top: 1px solid var(--line); padding-top: 6px; font-weight: 600; }
+
+  .donts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .donts li { display: flex; gap: 10px; font-size: 14px; }
+  .donts .x { color: var(--stop); font-weight: 700; flex: 0 0 auto; }
+  .donts b { display: block; }
+  .donts span.why { color: var(--ink-soft); font-size: 13px; }
+
+  footer { font-size: 12.5px; color: var(--ink-faint); text-align: center; text-wrap: balance; }
+  footer a { color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Worthy Farm &middot; 23&ndash;27 June 2027</p>
+    <h1>Don't refresh. Just be there.</h1>
+    <p class="lede">
+      The sale is a random queue drawn from everyone already on the page when it opens.
+      Refreshing forfeits your place. This is the clock and the checklist &mdash; nothing here
+      touches See Tickets.
+    </p>
+  </header>
+
+  <div class="targets" id="targets" role="group" aria-label="Choose which sale to count down to"></div>
+
+  <div class="clock-panel">
+    <div class="clock-when">
+      <span id="clock-label"><strong>&nbsp;</strong></span>
+      <span id="clock-when-detail"></span>
+    </div>
+    <div class="clock" id="clock" role="timer" aria-live="off"></div>
+  </div>
+
+  <div class="phase calm" id="phase">
+    <span class="tag" id="phase-tag">Standing by</span>
+    <span class="headline" id="phase-headline">&nbsp;</span>
+    <span class="sub" id="phase-sub">&nbsp;</span>
+  </div>
+
+  <section id="board">
+    <div class="sec-head">
+      <h2>Your syndicate</h2>
+      <span class="hint" id="board-state">Just you</span>
+    </div>
+    <p class="hint">
+      One transaction covers six people &mdash; you only need <em>one</em> of you through.
+      Everyone must be on a different network: several people behind one router is one IP
+      running several sessions, which is what gets blocked.
+    </p>
+    <div class="me-row">
+      <input type="text" id="nickname" placeholder="Your name" maxlength="24" autocomplete="off" aria-label="Your name">
+    </div>
+    <div class="status-picker" id="status-picker" role="group" aria-label="Your status"></div>
+    <ul class="peers" id="peers"></ul>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Booking details</h2>
+      <span class="hint">Tap to copy</span>
+    </div>
+    <p class="hint">
+      You need a registration number <em>and</em> the postcode on that registration for every
+      person. Stays on this device &mdash; never shared with the room.
+    </p>
+    <p class="example-note" id="example-note" hidden>
+      These are example rows. Replace them with your own before sale day.
+    </p>
+    <div style="overflow-x:auto">
+      <table class="party">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Registration</th><th>Postcode</th><th></th></tr>
+        </thead>
+        <tbody id="party-body"></tbody>
+      </table>
+    </div>
+    <div class="add-row">
+      <input type="text" id="add-name" placeholder="Name" maxlength="30" autocomplete="off" aria-label="Name">
+      <input type="text" id="add-reg" placeholder="Reg number" maxlength="20" autocomplete="off" aria-label="Registration number">
+      <input type="text" id="add-post" placeholder="Postcode" maxlength="10" autocomplete="off" aria-label="Postcode">
+      <button class="btn" id="add-btn">Add</button>
+    </div>
+    <p class="hint" id="party-warn"></p>
+  </section>
+
+  <details>
+    <summary>Dates, money and the things that get you blocked</summary>
+    <div class="details-body">
+      <table class="dates" id="dates"></table>
+
+      <div class="money">
+        <div><span>Ticket, incl. &pound;5 booking fee</span><span class="amt">&pound;408</span></div>
+        <div><span>Deposit per person, on the day</span><span class="amt">&pound;100</span></div>
+        <div><span>Balance per person, 1&ndash;7 April 2027</span><span class="amt">&pound;308</span></div>
+        <div class="total"><span id="money-label">Deposit for a full six</span><span class="amt" id="money-total">&pound;600</span></div>
+      </div>
+
+      <ul class="donts">
+        <li><span class="x">&times;</span><span><b>Auto-refresh scripts</b><span class="why">The queue is a random draw. Refreshing forfeits your place and reads as bot behaviour.</span></span></li>
+        <li><span class="x">&times;</span><span><b>Several tabs or devices on one IP</b><span class="why">Explicitly warned against &mdash; it gets the whole IP blocked.</span></span></li>
+        <li><span class="x">&times;</span><span><b>Resale sites and touts</b><span class="why">Tickets carry your photo and are non-transferable. A touted ticket will not get you in.</span></span></li>
+        <li><span class="x">&times;</span><span><b>Anyone "guaranteeing" tickets</b><span class="why">There is no such thing. It is a scam, every time.</span></span></li>
+      </ul>
+    </div>
+  </details>
+
+  <footer>
+    Counting down on your device's clock &mdash; phones sync automatically, laptops drift.
+    Verify dates at <a href="https://www.glastonburyfestivals.co.uk/information/tickets/" target="_blank" rel="noopener">glastonburyfestivals.co.uk</a>.
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- data -------------------------------------------------------------
+
+  // UTC instants. The published times are BST (UTC+1); BST runs until
+  // 25 Oct 2026, so every October date sits an hour behind its UTC value.
+  var MILESTONES = [
+    { id: "registration-closes", short: "Registration",  label: "Registration closes",
+      utc: "2026-09-25T16:00:00Z", when: "5pm, Fri 25 Sep 2026" },
+    { id: "coach-sale",          short: "Coach sale",    label: "Coach + ticket packages",
+      utc: "2026-10-01T17:00:00Z", when: "6pm, Thu 1 Oct 2026" },
+    { id: "general-sale",        short: "General sale",  label: "General admission",
+      utc: "2026-10-04T08:00:00Z", when: "9am, Sun 4 Oct 2026" },
+    { id: "balance-closes",      short: "Balance",       label: "Balance payment deadline",
+      utc: "2027-04-07T22:59:00Z", when: "11.59pm, Wed 7 Apr 2027" },
+    { id: "festival",            short: "Festival",      label: "Gates open",
+      utc: "2027-06-23T07:00:00Z", when: "Wed 23 Jun 2027" }
+  ];
+  MILESTONES.forEach(function (m) { m.at = Date.parse(m.utc); });
+
+  var STATUSES = [
+    { id: "waiting", label: "Not started",   chip: "" },
+    { id: "queue",   label: "In the queue",  chip: "s-queue" },
+    { id: "booking", label: "Booking now",   chip: "s-booking" },
+    { id: "got",     label: "Got them",      chip: "s-got" },
+    { id: "out",     label: "No luck",       chip: "s-out" }
+  ];
+
+  var EXAMPLE_PARTY = [
+    { name: "You",        reg: "1234567", post: "BA10 0AA", example: true },
+    { name: "Friend one", reg: "2345678", post: "BS1 4DJ",  example: true }
+  ];
+
+  // ---- storage (may throw in a private window) --------------------------
+
+  function load(key, fallback) {
+    try {
+      var raw = localStorage.getItem("glasto." + key);
+      return raw === null ? fallback : JSON.parse(raw);
+    } catch (e) { return fallback; }
+  }
+
+  function save(key, value) {
+    try { localStorage.setItem("glasto." + key, JSON.stringify(value)); } catch (e) { /* fine */ }
+  }
+
+  var state = {
+    targetId: load("target", null),
+    party: load("party", null),
+    nickname: load("nickname", ""),
+    status: load("status", "waiting")
+  };
+
+  var usingExamples = state.party === null;
+  if (usingExamples) state.party = EXAMPLE_PARTY.slice();
+
+  // Default the countdown to the next milestone that has not passed.
+  if (!state.targetId || !byId(state.targetId)) {
+    var now = Date.now();
+    var upcoming = MILESTONES.filter(function (m) { return m.at > now; })[0];
+    state.targetId = (upcoming || MILESTONES[MILESTONES.length - 1]).id;
+  }
+
+  function byId(id) {
+    for (var i = 0; i < MILESTONES.length; i++) if (MILESTONES[i].id === id) return MILESTONES[i];
+    return null;
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---- countdown --------------------------------------------------------
+
+  function split(ms) {
+    var s = Math.floor(ms / 1000);
+    return {
+      d: Math.floor(s / 86400),
+      h: Math.floor((s % 86400) / 3600),
+      m: Math.floor((s % 3600) / 60),
+      s: s % 60
+    };
+  }
+
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+
+  function agoText(ms) {
+    var t = split(ms);
+    if (t.d) return t.d + "d " + t.h + "h ago";
+    if (t.h) return t.h + "h " + t.m + "m ago";
+    if (t.m) return t.m + "m ago";
+    return t.s + "s ago";
+  }
+
+  // Mirrors the CLI's phaseAdvice thresholds exactly.
+  function phaseFor(gap, milestone) {
+    var isSale = milestone.id === "coach-sale" || milestone.id === "general-sale";
+    if (gap <= 0) {
+      return isSale ? {
+        cls: "live", tag: "Sale is open",
+        headline: "Wait in the queue. Do not refresh.",
+        sub: "The progress bar moves on its own. Refreshing sends you to the back, whatever it looks like it is doing."
+      } : {
+        cls: "live", tag: "Passed",
+        headline: milestone.label + " has passed.",
+        sub: "Pick another date above."
+      };
+    }
+    if (!isSale) {
+      return {
+        cls: "calm", tag: "Standing by",
+        headline: milestone.label,
+        sub: milestone.id === "registration-closes"
+          ? "Everyone attending must be individually registered before this. Miss it and you cannot buy in October at all."
+          : "Nothing to do yet."
+      };
+    }
+    if (gap <= 60000) {
+      return {
+        cls: "critical", tag: "Any second now",
+        headline: "Hands off the keyboard.",
+        sub: "Do not refresh, do not reload, do not open another tab. The queue assigns your place automatically."
+      };
+    }
+    if (gap <= 600000) {
+      return {
+        cls: "warn", tag: "Load the page now",
+        headline: "Open the sale page and leave it completely alone.",
+        sub: "One tab, one device. Turn off any VPN. Stop the screen locking. Then do nothing."
+      };
+    }
+    return {
+      cls: "calm", tag: "Standing by",
+      headline: "Not yet.",
+      sub: "Open the sale page about ten minutes before, then leave it untouched until the queue moves."
+    };
+  }
+
+  var clockEl = $("clock");
+  var phaseEl = $("phase");
+  var lastPhase = null;
+  var lastLive = null;
+
+  function renderClock() {
+    var m = byId(state.targetId);
+    var gap = m.at - Date.now();
+
+    $("clock-label").innerHTML = "<strong></strong>";
+    $("clock-label").firstChild.textContent = m.label;
+    $("clock-when-detail").textContent = m.when;
+
+    var live = gap <= 0;
+    if (live !== lastLive) {
+      clockEl.classList.toggle("is-live", live);
+      lastLive = live;
+    }
+
+    if (live) {
+      clockEl.innerHTML =
+        '<div style="display:flex;flex-direction:column;gap:4px">' +
+        '<span class="live-banner"></span><span class="live-since"></span></div>';
+      clockEl.querySelector(".live-banner").textContent =
+        (m.id === "coach-sale" || m.id === "general-sale") ? "Sale is open" : "Passed";
+      clockEl.querySelector(".live-since").textContent = agoText(-gap);
+    } else {
+      var t = split(gap);
+      clockEl.innerHTML =
+        unitHtml(t.d, "days") + '<span class="sep">:</span>' +
+        unitHtml(pad(t.h), "hrs") + '<span class="sep">:</span>' +
+        unitHtml(pad(t.m), "min") + '<span class="sep">:</span>' +
+        unitHtml(pad(t.s), "sec");
+    }
+
+    var p = phaseFor(gap, m);
+    var key = p.cls + "|" + p.headline;
+    if (key !== lastPhase) {
+      phaseEl.className = "phase " + p.cls;
+      $("phase-tag").textContent = p.tag;
+      $("phase-headline").textContent = p.headline;
+      $("phase-sub").textContent = p.sub;
+      lastPhase = key;
+    }
+  }
+
+  function unitHtml(value, label) {
+    return '<span class="unit"><span class="n">' + value + '</span><span class="l">' + label + '</span></span>';
+  }
+
+  // ---- target picker ----------------------------------------------------
+
+  function renderTargets() {
+    var box = $("targets");
+    box.innerHTML = "";
+    MILESTONES.forEach(function (m) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = m.short;
+      b.setAttribute("aria-pressed", String(m.id === state.targetId));
+      b.addEventListener("click", function () {
+        state.targetId = m.id;
+        save("target", m.id);
+        lastPhase = null;
+        lastLive = null;
+        renderTargets();
+        renderClock();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  // ---- dates table ------------------------------------------------------
+
+  function renderDates() {
+    var now = Date.now();
+    var table = $("dates");
+    table.innerHTML = "";
+    MILESTONES.forEach(function (m) {
+      var tr = document.createElement("tr");
+      if (m.at <= now) tr.className = "done";
+      var a = document.createElement("td");
+      a.textContent = m.label;
+      var b = document.createElement("td");
+      b.textContent = m.when;
+      tr.appendChild(a);
+      tr.appendChild(b);
+      table.appendChild(tr);
+    });
+  }
+
+  // ---- booking details --------------------------------------------------
+
+  function copyCell(text, btn) {
+    var done = function () {
+      var was = btn.textContent;
+      btn.classList.add("copied");
+      btn.textContent = "copied";
+      setTimeout(function () { btn.textContent = was; btn.classList.remove("copied"); }, 900);
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(btn); });
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    selectText(btn);
+  }
+
+  function selectText(el) {
+    try {
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) { /* nothing sensible left to do */ }
+  }
+
+  function valueCell(td, text) {
+    if (text) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "copy";
+      b.textContent = text;
+      b.addEventListener("click", function () { copyCell(text, b); });
+      td.appendChild(b);
+    } else {
+      var s = document.createElement("span");
+      s.className = "missing";
+      s.textContent = "MISSING";
+      td.appendChild(s);
+    }
+  }
+
+  function renderParty() {
+    var body = $("party-body");
+    body.innerHTML = "";
+
+    state.party.forEach(function (p, i) {
+      var tr = document.createElement("tr");
+
+      var n = document.createElement("td");
+      n.className = "num";
+      n.textContent = String(i + 1);
+      tr.appendChild(n);
+
+      var who = document.createElement("td");
+      who.className = "who";
+      who.textContent = p.name;
+      tr.appendChild(who);
+
+      var reg = document.createElement("td");
+      valueCell(reg, p.reg);
+      tr.appendChild(reg);
+
+      var post = document.createElement("td");
+      valueCell(post, p.post);
+      tr.appendChild(post);
+
+      var del = document.createElement("td");
+      var x = document.createElement("button");
+      x.type = "button";
+      x.className = "row-del";
+      x.textContent = "×";
+      x.setAttribute("aria-label", "Remove " + p.name);
+      x.addEventListener("click", function () {
+        state.party.splice(i, 1);
+        usingExamples = false;
+        save("party", state.party);
+        renderParty();
+      });
+      del.appendChild(x);
+      tr.appendChild(del);
+
+      body.appendChild(tr);
+    });
+
+    $("example-note").hidden = !usingExamples;
+
+    var warn = $("party-warn");
+    var over = state.party.length - 6;
+    var incomplete = state.party.filter(function (p) { return !p.reg || !p.post; }).length;
+    var bits = [];
+    if (over > 0) bits.push(over + " more than fit in one transaction — agree the priority six in writing now.");
+    if (incomplete > 0) bits.push(incomplete + " " + (incomplete === 1 ? "person is" : "people are") + " missing details.");
+    warn.textContent = bits.join(" ");
+
+    var six = Math.min(Math.max(state.party.length, 1), 6);
+    $("money-label").textContent = "Deposit for " + (six === 1 ? "one person" : six + " people");
+    $("money-total").textContent = "£" + (six * 100);
+  }
+
+  $("add-btn").addEventListener("click", function () {
+    var name = $("add-name").value.trim();
+    if (!name) { $("add-name").focus(); return; }
+    if (usingExamples) { state.party = []; usingExamples = false; }
+    state.party.push({
+      name: name,
+      reg: $("add-reg").value.trim(),
+      post: $("add-post").value.trim().toUpperCase()
+    });
+    save("party", state.party);
+    $("add-name").value = "";
+    $("add-reg").value = "";
+    $("add-post").value = "";
+    $("add-name").focus();
+    renderParty();
+  });
+
+  ["add-name", "add-reg", "add-post"].forEach(function (id) {
+    $(id).addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); $("add-btn").click(); }
+    });
+  });
+
+  // ---- syndicate board (room capability, absent by default) -------------
+
+  var room = null;
+
+  function statusMeta(id) {
+    for (var i = 0; i < STATUSES.length; i++) if (STATUSES[i].id === id) return STATUSES[i];
+    return STATUSES[0];
+  }
+
+  function renderStatusPicker() {
+    var box = $("status-picker");
+    box.innerHTML = "";
+    STATUSES.forEach(function (s) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = s.label;
+      b.setAttribute("aria-pressed", String(s.id === state.status));
+      b.addEventListener("click", function () {
+        state.status = s.id;
+        save("status", s.id);
+        renderStatusPicker();
+        pushPresence();
+        renderPeers();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function pushPresence() {
+    if (!room) return;
+    // Only a typed name and a status ever leave this device. Registration
+    // numbers and postcodes stay in localStorage, deliberately.
+    room.presence({
+      name: state.nickname.slice(0, 24) || null,
+      status: state.status
+    })["catch"](function () { /* presence is best effort */ });
+  }
+
+  function renderPeers() {
+    var list = $("peers");
+    list.innerHTML = "";
+
+    var rows;
+    if (room) {
+      rows = room.peers().filter(function (p) { return p.kind === "viewer"; }).map(function (p) {
+        var pres = p.presence || {};
+        return {
+          name: typeof pres.name === "string" && pres.name ? pres.name : "Someone",
+          status: typeof pres.status === "string" ? pres.status : "waiting",
+          isMe: p.sameTab
+        };
+      });
+      if (!rows.length) rows = [{ name: state.nickname || "You", status: state.status, isMe: true }];
+    } else {
+      rows = [{ name: state.nickname || "You", status: state.status, isMe: true }];
+    }
+
+    rows.sort(function (a, b) { return (b.isMe ? 1 : 0) - (a.isMe ? 1 : 0); });
+
+    rows.forEach(function (r) {
+      var li = document.createElement("li");
+
+      var name = document.createElement("span");
+      name.className = "peer-name";
+      name.textContent = r.name;
+      li.appendChild(name);
+
+      // The "you" marker only earns its place when there is someone to be
+      // distinguished from.
+      if (r.isMe && rows.length > 1) {
+        var you = document.createElement("span");
+        you.className = "peer-you";
+        you.textContent = "you";
+        li.appendChild(you);
+      }
+
+      var meta = statusMeta(r.status);
+      var chip = document.createElement("span");
+      chip.className = "chip " + meta.chip;
+      chip.textContent = meta.label;
+      li.appendChild(chip);
+
+      list.appendChild(li);
+    });
+
+    var got = rows.filter(function (r) { return r.status === "got"; }).length;
+    var label;
+    if (got > 0) label = got === 1 ? "One of you is through" : got + " of you are through";
+    else if (!room) label = "Just you";
+    else label = rows.length === 1 ? "Just you so far" : rows.length + " here now";
+    $("board-state").textContent = label;
+  }
+
+  var nick = $("nickname");
+  nick.value = state.nickname;
+  nick.addEventListener("input", function () {
+    state.nickname = nick.value;
+    save("nickname", state.nickname);
+    pushPresence();
+    renderPeers();
+  });
+
+  // ---- boot -------------------------------------------------------------
+
+  renderTargets();
+  renderClock();
+  renderDates();
+  renderParty();
+  renderStatusPicker();
+  renderPeers();
+
+  setInterval(renderClock, 250);
+
+  // The room lights the board up if it is available; the page above is
+  // already complete without it.
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("room").then(function (r) {
+      if (!r) return;
+      room = r;
+      room.onPeers(function () { renderPeers(); }, function () { room = null; renderPeers(); });
+      pushPresence();
+      renderPeers();
+    })["catch"](function () { /* stay in solo mode */ });
+  }
+})();
+</script>
