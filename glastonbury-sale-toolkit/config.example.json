@@ -1,0 +1,30 @@
+{
+  "_comment": "Copy to config.json and fill in. config.json is gitignored - it holds personal data.",
+  "perAttemptOdds": 0.08,
+  "party": [
+    {
+      "name": "You",
+      "registrationNumber": "1234567",
+      "postcode": "BA10 0AA",
+      "attempting": true,
+      "network": "home broadband",
+      "priority": 1
+    },
+    {
+      "name": "Friend One",
+      "registrationNumber": "2345678",
+      "postcode": "BS1 4DJ",
+      "attempting": true,
+      "network": "their home broadband",
+      "priority": 2
+    },
+    {
+      "name": "Friend Two",
+      "registrationNumber": "3456789",
+      "postcode": "M1 1AE",
+      "attempting": true,
+      "network": "mobile data (EE)",
+      "priority": 3
+    }
+  ]
+}
